@@ -122,3 +122,7 @@ git rebase --continue
 git add file.txt
 git rebase --continue
 ```
+## After every exercise :
+```bash
+git verify #to check solution
+git start next #to start the next exercise
