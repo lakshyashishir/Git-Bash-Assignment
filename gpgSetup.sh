@@ -6,16 +6,11 @@
         exit 1
     fi
 
-
 function check_gpg_key {
     if [ -z "$(gpg --list-secret-keys --keyid-format=long)" ]; then
         echo "Error: No gpg key found." 
         exit 1
     fi
-}
-
-function signingkey {
-    gppsigningkey=$(git config --global user.signingkey)
 }
 
 function configure_git {
