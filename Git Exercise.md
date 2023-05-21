@@ -126,3 +126,4 @@ git rebase --continue
 ```bash
 git verify #to check solution
 git start next #to start the next exercise
+```
