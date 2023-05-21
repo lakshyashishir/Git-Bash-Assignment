@@ -25,9 +25,15 @@ function configure_git {
 
 echo "Welcome to gpg setup"
 input=4
+KeyID=""
+KeyInstruction="Enter the uid of the key you want to use, for example in rsa3072./1E58C37F20F75F29 uid is 1E58C37F20F75F29"
 
 while [ $input -ne 0 ]; do
-    echo "Enter 1 to generate a new key, 2 to use existing keys, 3 to delete a key, 0 to exit"
+    echo "Enter : 
+    1 to generate a new key
+    2 to use existing keys
+    3 to delete a key
+    0 to exit"
     read -r input
 
     if [ $input -eq 1 ]; then
@@ -40,15 +46,15 @@ while [ $input -ne 0 ]; do
 
     elif [ $input -eq 2 ]; then
         gpg --list-secret-keys --keyid-format=long
-        echo "Enter the uid of the key you want to use"
-        read -r keyID
-        configure_git "$keyID"
+        echo "$KeyInstruction"
+        read -r KeyID
+        configure_git "$KeyID"
         gpg --armor --export "$KeyID" | cat
         echo "Use this key in github gpg section to sign future commits"
 
     elif [ $input -eq 3 ]; then
         gpg --list-secret-keys --keyid-format=long
-        echo "Enter the mail id of the key you want to delete"
+        echo "$KeyInstruction"
         read -r KeyID
         gpg --delete-secret-key "$KeyID"
         gpg --delete-key "$KeyID"
