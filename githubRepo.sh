@@ -8,11 +8,30 @@ echo "Create GitHub Repo"
 read -p "Do you want to use environment variables for GitHub configuration [y/n]: " envCheck
 
 if [[ "$envCheck" == "y" || "$envCheck" == "Y" ]]; then
+    if [[  -f ./config.txt ]]; then
     ghUsername="$Github_Username"
     pat="$ghkey"
+    else
+    echo = "No Config file"
+    exit 1
+    fi
 else
     read -p "Enter your GitHub username: " ghUsername
+    stty -echo
     read -p "Enter your GitHub personal access token: " pat
+    stty echo 
+    echo ""
+    read -p "Do you want to create github configuration for future use [y/n] :" configCheck
+    if [[ "$configCheck" == "y" || "$configCheck" == "Y" ]]; then
+        if [[ ! -f ./config.txt ]]; then
+        touch ./config.txt
+        echo "export Github_Username=$ghUsername" >> ./config.txt
+        echo "export ghkey=$pat" >> ./config.txt
+        echo "Config file created!"
+        else
+        echo "Config file already exist."
+        fi
+    fi
 fi
 
 fileAdded=false
@@ -50,17 +69,17 @@ curl -u "$ghUsername:$pat" -X POST \
 read -p "Do you want to add a README.md to this repo [y/n]: " readmeBool
 read -p "Do you want to create any file for this repo [y/n]: " fileBool
 
+mkdir -p "$repoName"
+cd "$repoName"
+git init
+
 if [[ "$readmeBool" == "y" || "$readmeBool" == "Y" || "$fileBool" == "y" || "$fileBool" == "Y" ]]; then
     fileAdded=true
-    mkdir -p "$repoName"
-    cd "$repoName"
-    git init
 
     if [[ "$readmeBool" == "y" || "$readmeBool" == "Y" ]]; then
         touch README.md
         git add README.md
     fi
-
     while [[ "$fileBool" == "y" || "$fileBool" == "Y" ]]; do
         read -p "Enter filename: " filename
         touch "$filename"
@@ -75,6 +94,7 @@ while [[ "$eFile" == "y" || "$eFile" == "Y" ]]; do
     fileAdded=true
     read -p "Enter file path: " filepath
     cp "$filepath" .
+    echo "$filepath"
     read -p "Do you want to add any other file to this repo [y/n]: " eFile
 done
 
